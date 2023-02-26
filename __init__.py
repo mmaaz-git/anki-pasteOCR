@@ -6,6 +6,7 @@ from anki.hooks import addHook
 from aqt import gui_hooks
 
 from . import pytesseract
+from .PIL import Image
 
 import tempfile
 import os
@@ -17,17 +18,15 @@ DIR = Path(__file__).parent
 def onStrike(editor):
     if editor.mw.app.clipboard().mimeData().hasImage():
         image = QImage(editor.mw.app.clipboard().mimeData().imageData())
-        image.save("ocrtmp.png")
-        path = os.path.abspath("ocrtmp.png")
-        output = pytesseract.image_to_string(path).replace("\n", "<br>")
+        pil_image = Image.fromqpixmap(image)
+        output = pytesseract.image_to_string(pil_image).replace("\n", "<br>")
         editor.doPaste(output, internal=False, extended=False)
-        os.remove(path)
     else:
         editor.onPaste()
 
 def addMyButton(buttons, editor):
     editor._links['strike'] = onStrike
-    key = QKeySequence(Qt.CTRL + Qt.ALT + Qt.Key_V)
+    key = QKeySequence(Qt.Modifier.CTRL | Qt.Modifier.ALT | Qt.Key.Key_V)
     keyStr = key.toString(QKeySequence.NativeText)
     return buttons + [editor.addButton(
         icon=str(DIR / "clipboard.png"),
