@@ -6,7 +6,7 @@ from anki.hooks import addHook
 from aqt import gui_hooks
 
 from . import pytesseract
-from .PIL import Image
+#from .PIL import Image
 
 import tempfile
 import os
@@ -18,8 +18,12 @@ DIR = Path(__file__).parent
 def onStrike(editor):
     if editor.mw.app.clipboard().mimeData().hasImage():
         image = QImage(editor.mw.app.clipboard().mimeData().imageData())
-        pil_image = Image.fromqpixmap(image)
-        output = pytesseract.image_to_string(pil_image).replace("\n", "<br>")
+        path = str(DIR / "ocrtemp.png")
+        image.save(path)
+        output = pytesseract.image_to_string(path).replace("\n", "<br>")
+        os.remove(path)
+        #pil_image = Image.fromqpixmap(image)
+        #output = pytesseract.image_to_string(pil_image).replace("\n", "<br>")
         editor.doPaste(output, internal=False, extended=False)
     else:
         editor.onPaste()
