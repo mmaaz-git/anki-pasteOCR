@@ -18,15 +18,9 @@ You can also use the keyboard shortcut for convenience: `Ctrl + Alt + V` on Wind
 
 pasteOCR uses the Tesseract OCR engine, a powerful OCR engine currently maintained by Google. More on Tesseract [here](https://opensource.google/projects/tesseract).
 
-If you are using Windows, the Tesseract binaries are included with the addon.
+If you are using Windows or Mac OSX, the Tesseract binaries are included with the addon.
 
-If you are using Mac OSX, you will have to install Tesseract to your computer. The easiest way to do this is to install Homebrew. Open the terminal and run the following command:
-
-`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"`
-
-Once that's installed, run the following command:
-
-`brew install tesseract`
+For Linux, follow [the instructions here](https://tesseract-ocr.github.io/tessdoc/Installation.html) to install Tesseract.
 
 Once Tesseract is ready to go, you can install the addon to Anki within the program, using the installation code: `1746010116`.
 
