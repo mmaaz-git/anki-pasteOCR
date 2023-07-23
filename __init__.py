@@ -8,6 +8,7 @@ from aqt import gui_hooks
 from . import pytesseract
 #from .PIL import Image
 
+import subprocess
 import tempfile
 import os
 import platform
@@ -20,7 +21,7 @@ def onStrike(editor):
         image = QImage(editor.mw.app.clipboard().mimeData().imageData())
         path = str(DIR / "ocrtemp.png")
         image.save(path)
-        output = pytesseract.image_to_string(path).replace("\n", "<br>")
+        output = pytesseract.image_to_string(path, config=tesseract_config()).replace("\n", "<br>")
         os.remove(path)
         #pil_image = Image.fromqpixmap(image)
         #output = pytesseract.image_to_string(pil_image).replace("\n", "<br>")
@@ -42,11 +43,22 @@ def addMyButton(buttons, editor):
 
 def path_to_tesseract():
     exec_data = {"Windows": str(DIR / "deps/win/tesseract/tesseract.exe"),
-        "Darwin": "/usr/local/bin/tesseract",
+        "Darwin": str(DIR / "deps/mac/tesseract/4.1.1/bin/tesseract"),
         "Linux": "/usr/local/bin/tesseract"}
     platform_name = platform.system()  # E.g. 'Windows'
     return exec_data[platform_name]
 
+def set_tesseract_exe_permission():
+    if platform.system() == "Darwin":
+        subprocess.Popen(["chmod", "+x", path_to_tesseract()])
+
+def tesseract_config():
+    config = ''
+    if platform.system() == "Darwin":
+        path = str(DIR / "deps/mac/tesseract/4.1.1/share/tessdata")
+        config = f'--tessdata-dir "{path}"'
+    return config
 
 addHook("setupEditorButtons", addMyButton)
 pytesseract.pytesseract.tesseract_cmd=path_to_tesseract()
+set_tesseract_exe_permission()
