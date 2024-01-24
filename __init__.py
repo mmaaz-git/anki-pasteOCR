@@ -31,13 +31,13 @@ def onStrike(editor):
 def addMyButton(buttons, editor):
     editor._links['strike'] = onStrike
     key = QKeySequence(Qt.Modifier.CTRL | Qt.Modifier.ALT | Qt.Key.Key_V)
-    keyStr = key.toString(QKeySequence.NativeText)
+    keyStr = key.toString(QKeySequence.SequenceFormat.NativeText)
     return buttons + [editor.addButton(
         icon=str(DIR / "clipboard.png"),
         func=onStrike,
         cmd="strike",
         tip="Paste image as text ({})".format(keyStr),
-        keys=key.toString(QKeySequence.PortableText),
+        keys=key.toString(QKeySequence.SequenceFormat.PortableText),
         disables=False)]
 
 def path_to_tesseract():
